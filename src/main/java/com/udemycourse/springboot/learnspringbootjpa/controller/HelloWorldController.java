@@ -1,9 +1,6 @@
 package com.udemycourse.springboot.learnspringbootjpa.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author bibek
@@ -16,4 +13,15 @@ public class HelloWorldController {
     public String helloWorld() {
         return "Hello World";
     }
+
+    @GetMapping(path = "/hello-word-bean")
+    public HelloWorldBean helloWorldBean() {
+        return new HelloWorldBean("Hello world");
+    }
+
+    @GetMapping(path = "/hello-world/path-variable/{name}")
+    public HelloWorldBean helloWorld(@PathVariable String name) {
+        return new HelloWorldBean(String.format("Hello World, %s", name));
+    }
+
 }
