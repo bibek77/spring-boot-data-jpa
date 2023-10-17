@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * @author bibek
  */
-@RestController
+//@RestController
 public class HelloWorldController {
 
     @GetMapping(path = "/hello")
