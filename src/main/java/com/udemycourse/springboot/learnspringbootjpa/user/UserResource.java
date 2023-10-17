@@ -41,4 +41,9 @@ public class UserResource {
         // response entity created returns status as 201
         return ResponseEntity.created(location).build();
     }
+
+    @RequestMapping(method = RequestMethod.DELETE, path = "/users/{id}")
+    public void deleteById(@PathVariable int id) {
+        service.deleteOne(id);
+    }
 }
