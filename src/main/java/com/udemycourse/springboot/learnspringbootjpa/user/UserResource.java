@@ -1,5 +1,6 @@
 package com.udemycourse.springboot.learnspringbootjpa.user;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class UserResource {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/users")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         User savedUser = service.save(user);
         // location gives the full location where we get the id of the user from the saved user object
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
