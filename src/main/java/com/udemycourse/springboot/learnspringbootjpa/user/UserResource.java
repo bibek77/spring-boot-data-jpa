@@ -1,8 +1,11 @@
 package com.udemycourse.springboot.learnspringbootjpa.user;
 
+//import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -47,5 +50,16 @@ public class UserResource {
     @RequestMapping(method = RequestMethod.DELETE, path = "/users/{id}")
     public void deleteById(@PathVariable int id) {
         service.deleteOne(id);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/users-new/{id}")
+    public EntityModel<User> retrieveUserById2(@PathVariable int id) {
+        User user = service.findOne(id);
+        if(user==null)
+            throw new UserNotFoundException("id: "+id);
+        EntityModel<User> entityModel = EntityModel.of(user);
+        WebMvcLinkBuilder linkBuilder = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).retrieveAllUsers());
+        entityModel.add(linkBuilder.withRel("all-users"));
+        return entityModel;
     }
 }

@@ -1,5 +1,6 @@
 package com.udemycourse.springboot.learnspringbootjpa.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 public class User {
     private Integer id;
     @Size(min = 2, message = "Name should have at least 2 chars")
+    @JsonProperty("fullName")
     private String name;
     @Past(message = "BirthDate should be in past")
     private LocalDate birthDate;
