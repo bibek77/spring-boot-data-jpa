@@ -61,4 +61,12 @@ public class UserJPAResource {
         repository.deleteById(id);
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/users/{id}/posts")
+    public List<Post> retrievePostsForUser(@PathVariable int id) {
+        Optional<User> user = repository.findById(id);
+        if(user.isEmpty())
+            throw new UserNotFoundException("id: "+id);
+        return user.get().getPostList();
+    }
+
 }
