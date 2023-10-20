@@ -1,6 +1,7 @@
 package com.udemycourse.springboot.learnspringbootjpa.user;
 
 //import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -26,9 +27,11 @@ public class UserJPAResource {
 
     private UserRepository repository;
 
-    public UserJPAResource(UserDaoService service, UserRepository repository) {
-//        this.service = service;
+    private PostRepository postRepository;
+
+    public UserJPAResource(UserRepository repository, PostRepository postRepository) {
         this.repository = repository;
+        this.postRepository = postRepository;
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/users")
@@ -40,8 +43,8 @@ public class UserJPAResource {
     @RequestMapping(method = RequestMethod.GET, path = "/users/{id}")
     public User retrieveUserById(@PathVariable int id) {
         Optional<User> user = repository.findById(id);
-        if(user.isEmpty())
-            throw new UserNotFoundException("id: "+id);
+        if (user.isEmpty())
+            throw new UserNotFoundException("id: " + id);
         return user.get();
     }
 
@@ -64,9 +67,23 @@ public class UserJPAResource {
     @RequestMapping(method = RequestMethod.GET, path = "/users/{id}/posts")
     public List<Post> retrievePostsForUser(@PathVariable int id) {
         Optional<User> user = repository.findById(id);
-        if(user.isEmpty())
-            throw new UserNotFoundException("id: "+id);
+        if (user.isEmpty())
+            throw new UserNotFoundException("id: " + id);
         return user.get().getPostList();
     }
 
+    @RequestMapping(method = RequestMethod.POST, path = "/users/{id}/posts")
+    public ResponseEntity<Object> createPostForUser(@PathVariable int id, @Valid @RequestBody Post post) {
+        Optional<User> user = repository.findById(id);
+        if (user.isEmpty())
+            throw new UserNotFoundException("id not found : " + id);
+        post.setUser(user.get());
+        Post savedPost = postRepository.save(post);
+        // location gives the full location where we get the id of the user from the saved user object
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedPost.getId()).toUri();
+        // response entity created returns status as 201
+        return ResponseEntity.created(location).build();
+    }
 }
