@@ -1,4 +1,4 @@
-package com.udemycourse.springboot.learnspringbootjpa.limits;
+package com.udemycourse.springboot.learnspringbootjpa.limitservice;
 
 /**
  * @author bibek
